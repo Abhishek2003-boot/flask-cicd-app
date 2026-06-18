@@ -3,21 +3,24 @@ pipeline {
 
     stages {
 
-        stage('Clone') {
+        stage('Clone Code') {
             steps {
-                echo 'Code Cloned Successfully'
+                git branch: 'main',
+                url: 'https://github.com/Abhishek2003-boot/flask-cicd-app.git'
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Build Stage Successful'
+                bat 'docker build -t flask-cicd-app .'
             }
         }
 
-        stage('Test') {
+        stage('Run Container') {
             steps {
-                echo 'Test Stage Successful'
+                bat 'docker stop flask-app || exit 0'
+                bat 'docker rm flask-app || exit 0'
+                bat 'docker run -d -p 5000:5000 --name flask-app flask-cicd-app'
             }
         }
     }
